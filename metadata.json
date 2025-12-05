@@ -1,0 +1,7 @@
+{
+  "name": "AI Buddy",
+  "description": "A versatile AI assistant for software development, multimedia creation, translation, and voice interaction, powered by Gemini.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}

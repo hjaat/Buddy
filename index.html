@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Buddy</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    pre {
+      background-color: rgb(15 23 42 / 0.7); /* slate-900 with opacity */
+      border: 1px solid rgb(51 65 85); /* slate-700 */
+      color: rgb(226 232 240); /* slate-200 */
+      padding: 1rem;
+      border-radius: 0.5rem;
+      overflow-x: auto;
+      font-family: 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', "Liberation Mono", "Courier New", monospace;
+      font-size: 0.875rem;
+    }
+    pre code {
+      background-color: transparent;
+      padding: 0;
+    }
+    /* Simple inline code */
+    :not(pre) > code {
+      background-color: rgb(51 65 85 / 0.7); /* slate-700 */
+      color: rgb(226 232 240); /* slate-200 */
+      padding: 0.125rem 0.375rem;
+      border-radius: 0.25rem;
+      font-size: 0.85em;
+    }
+  </style>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'primary': 'rgb(15 23 42)',      // slate-900
+            'secondary': 'rgb(30 41 59)',    // slate-800
+            'input': 'rgb(51 65 85)',        // slate-700
+            'accent': 'rgb(79 70 229)',      // indigo-600
+            'highlight': 'rgb(99 102 241)',  // indigo-500
+            'text-primary': 'rgb(226 232 240)', // slate-200
+            'text-secondary': 'rgb(148 163 184)', // slate-400
+          },
+          keyframes: {
+            fadeInUp: {
+              '0%': { opacity: '0', transform: 'translateY(10px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+            pulse: {
+              '50%': { opacity: '.5' },
+            },
+            shine: {
+              '100%': { 'background-position': '-200% 0' },
+            }
+          },
+          animation: {
+            'fade-in-up': 'fadeInUp 0.5s ease-out forwards',
+            'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'background-shine': 'shine 2s linear infinite',
+          }
+        }
+      }
+    }
+  </script>
+<script type="importmap">
+{
+  "imports": {
+    "rxjs": "https://aistudiocdn.com/rxjs@^7.8.2?conditions=es2015",
+    "rxjs/operators": "https://aistudiocdn.com/rxjs@^7.8.2/operators?conditions=es2015",
+    "rxjs/ajax": "https://aistudiocdn.com/rxjs@^7.8.2/ajax?conditions=es2015",
+    "rxjs/webSocket": "https://aistudiocdn.com/rxjs@^7.8.2/webSocket?conditions=es2015",
+    "rxjs/testing": "https://aistudiocdn.com/rxjs@^7.8.2/testing?conditions=es2015",
+    "rxjs/fetch": "https://aistudiocdn.com/rxjs@^7.8.2/fetch?conditions=es2015",
+    "@angular/compiler": "https://next.esm.sh/@angular/compiler@^20.1.6-0?external=rxjs",
+    "@angular/platform-browser": "https://next.esm.sh/@angular/platform-browser@^20.1.6-0?external=rxjs",
+    "@angular/common": "https://next.esm.sh/@angular/common@^20.1.6-0?external=rxjs",
+    "@angular/common/http": "https://next.esm.sh/@angular/common@^20.1.6-0/http?external=rxjs",
+    "@angular/core": "https://next.esm.sh/@angular/core@^20.1.6-0?external=rxjs",
+    "@google/genai": "https://next.esm.sh/@google/genai@^1.16.0?external=rxjs",
+    "@angular/forms": "https://next.esm.sh/@angular/forms@^20.1.6-0?external=rxjs"
+  }
+}
+</script>
+</head>
+<body class="bg-primary text-text-primary font-sans" style="background-image: radial-gradient(circle at top, rgb(30 41 59 / 0.5), transparent 35%)">
+  <app-root></app-root>
+</body>
+</html>

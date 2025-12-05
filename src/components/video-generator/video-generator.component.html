@@ -1,0 +1,141 @@
+<div class="h-full flex flex-col p-4 md:p-6">
+  <header class="flex-shrink-0">
+    <h2 class="text-2xl font-bold text-text-primary">Video Generation</h2>
+    <p class="text-text-secondary text-sm mt-1">Bring your ideas to life with AI-powered video.</p>
+  </header>
+  
+  <div class="mt-6 p-4 bg-secondary rounded-xl shadow-lg">
+    <div class="flex flex-col gap-4">
+      <textarea [(ngModel)]="prompt"
+                rows="3"
+                class="w-full bg-input rounded-lg p-3 text-sm placeholder:text-text-secondary/70 outline-none ring-1 ring-transparent focus:ring-2 focus:ring-accent transition"
+                placeholder="e.g., A drone shot of a futuristic city at sunset, flying cars whizzing by"></textarea>
+
+       <div class="border-t border-input/50 pt-4">
+        @if (selectedImagePreviewUrl()) {
+          <div class="relative w-40 h-24 rounded-lg overflow-hidden group shadow-md">
+            <img [src]="selectedImagePreviewUrl()" alt="Selected image" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <button (click)="removeImage()" class="p-2 bg-red-600 rounded-full text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black/50 focus:ring-white">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                  <path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 0 0 6 3.75v.443c-.795.077-1.58.22-2.365.468a.75.75 0 1 0 .53 1.402l.11-.034a.75.75 0 0 1 .838.838l-.034.11a.75.75 0 1 0 1.402.53c.248-.785.39-1.57.468-2.365h.443A2.75 2.75 0 0 0 11.25 1h-2.5ZM10 4.25a.75.75 0 0 1 .75.75v8.5a.75.75 0 0 1-1.5 0v-8.5a.75.75 0 0 1 .75-.75ZM7.5 4.75a.75.75 0 0 0-1.5 0v8.5a.75.75 0 0 0 1.5 0v-8.5ZM12.5 4.75a.75.75 0 0 0-1.5 0v8.5a.75.75 0 0 0 1.5 0v-8.5Z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        } @else {
+          <div>
+            <label for="video-image-upload" class="cursor-pointer bg-input/50 hover:bg-input text-text-primary text-sm font-medium px-4 py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                <path d="M9.25 13.25a.75.75 0 0 0 1.5 0V4.636l2.955 3.129a.75.75 0 0 0 1.09-1.03l-4.25-4.5a.75.75 0 0 0-1.09 0l-4.25 4.5a.75.75 0 1 0 1.09 1.03L9.25 4.636v8.614Z" />
+                <path d="M3.5 12.75a.75.75 0 0 0-1.5 0v2.5A2.75 2.75 0 0 0 4.75 18h10.5A2.75 2.75 0 0 0 18 15.25v-2.5a.75.75 0 0 0-1.5 0v2.5a1.25 1.25 0 0 1-1.25 1.25H4.75A1.25 1.25 0 0 1 3.5 15.25v-2.5Z" />
+              </svg>
+              <span>Upload Image (Optional)</span>
+            </label>
+            <input id="video-image-upload" type="file" class="hidden" (change)="onFileSelected($event)" accept="image/png, image/jpeg, image/webp">
+          </div>
+        }
+       </div>
+
+      <div class="border-t border-input/50 pt-4">
+        <h4 class="text-xs font-semibold text-text-secondary mb-2">Need inspiration? Try one of these:</h4>
+        <div class="flex flex-wrap gap-2">
+            @for(example of examplePrompts(); track example) {
+                <button (click)="useExample(example)" class="px-2.5 py-1 bg-input/50 hover:bg-input rounded-full text-xs text-text-primary transition-colors">
+                    {{ example }}
+                </button>
+            }
+        </div>
+      </div>
+
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div class="flex flex-wrap items-center gap-x-4 gap-y-3">
+          <!-- Aspect Ratio Selector -->
+          <div class="flex items-center gap-3">
+            <span class="text-sm font-medium text-text-secondary">Ratio:</span>
+            <div class="flex items-center bg-input/70 rounded-lg p-1">
+              @for (ratio of aspectRatios; track ratio) {
+                <button (click)="setAspectRatio(ratio)"
+                        [class.bg-accent]="aspectRatio() === ratio"
+                        [class.text-white]="aspectRatio() === ratio"
+                        [class.hover:bg-input]="aspectRatio() !== ratio"
+                        class="px-3 py-1.5 rounded-md text-xs font-semibold transition-colors">
+                  {{ ratio }}
+                </button>
+              }
+            </div>
+          </div>
+          <!-- Number of Videos Selector -->
+          <div class="flex items-center gap-3">
+            <span class="text-sm font-medium text-text-secondary">Videos:</span>
+            <div class="flex items-center bg-input/70 rounded-lg p-1">
+               @for (num of numberOfVideosOptions; track num) {
+                <button (click)="setNumberOfVideos(num)"
+                        [class.bg-accent]="numberOfVideos() === num"
+                        [class.text-white]="numberOfVideos() === num"
+                        [class.hover:bg-input]="numberOfVideos() !== num"
+                        class="w-10 text-center px-3 py-1.5 rounded-md text-xs font-semibold transition-colors">
+                  {{ num }}
+                </button>
+              }
+            </div>
+          </div>
+        </div>
+        <!-- Generate Button -->
+        <div class="flex-shrink-0">
+          <button (click)="generateVideos()" 
+                  [disabled]="isLoading() || (!prompt().trim() && !selectedImageFile())"
+                  class="w-full lg:w-auto px-6 py-2.5 bg-accent rounded-lg text-sm font-bold text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-highlight transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-accent/50">
+            @if (isLoading()) {
+              <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+              <span>Generating...</span>
+            } @else {
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4"><path d="M2 4.75A2.75 2.75 0 0 1 4.75 2h6.5A2.75 2.75 0 0 1 14 4.75v6.5A2.75 2.75 0 0 1 11.25 14h-6.5A2.75 2.75 0 0 1 2 11.25v-6.5Zm1.25.5a1.25 1.25 0 0 0-1.25 1.25v5a1.25 1.25 0 0 0 1.25 1.25h.5a.75.75 0 0 1 0 1.5h-1a2.75 2.75 0 0 1-2.75-2.75v-5A2.75 2.75 0 0 1 2.75 2h1a.75.75 0 0 1 0 1.5h-.5a1.25 1.25 0 0 0-1.25 1.25Z" /><path d="M12.75 4.5a.75.75 0 0 0-1.5 0v7a.75.75 0 0 0 1.5 0v-7Z" /><path d="M8.25 4.5a.75.75 0 0 0-1.5 0v7a.75.75 0 0 0 1.5 0v-7Z" /></svg>
+              <span>Generate Video</span>
+            }
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="mt-4 bg-red-900/50 border border-red-700 text-red-300 text-sm p-3 rounded-lg flex items-center gap-2">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M8 15a7 7 0 1 0 0-14 7 7 0 0 0 0 14ZM8 7a.75.75 0 0 1 .75.75v2.5a.75.75 0 0 1-1.5 0v-2.5A.75.75 0 0 1 8 7Zm0 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd" /></svg>
+      {{ error() }}
+    </div>
+  }
+
+  <div class="flex-1 mt-6 overflow-y-auto pr-2 -mr-2">
+    @if (isLoading()) {
+      <div class="flex flex-col items-center justify-center h-full text-center text-text-secondary/80 border-2 border-dashed border-input rounded-lg p-6">
+        <div class="relative w-20 h-20">
+            <div class="w-full h-full rounded-full border-4 border-input/50"></div>
+            <div class="absolute top-0 left-0 w-full h-full rounded-full border-4 border-accent border-t-transparent animate-spin"></div>
+        </div>
+        <h3 class="text-xl font-semibold text-text-primary mt-6">Generating Your Video{{ numberOfVideos() > 1 ? 's' : '' }}...</h3>
+        <p class="text-sm mt-2 max-w-sm">This process can take several minutes. Please be patient and do not close this window.</p>
+        @if (progressMessage()) {
+            <p class="mt-4 text-xs font-mono bg-input/50 px-3 py-1.5 rounded-md">{{ progressMessage() }}</p>
+        }
+      </div>
+    } @else if (!videos().length) {
+      <div class="flex flex-col items-center justify-center h-full text-center text-text-secondary/80 border-2 border-dashed border-input rounded-lg p-6">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 mb-4"><path stroke-linecap="round" stroke-linejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9A2.25 2.25 0 0 0 13.5 5.25h-9A2.25 2.25 0 0 0 2.25 7.5v9A2.25 2.25 0 0 0 4.5 18.75Z" /></svg>
+        <h3 class="text-lg font-semibold text-text-primary">Your generated videos will appear here</h3>
+        <p class="text-sm">Start by typing a prompt and clicking "Generate Video".</p>
+      </div>
+    } @else {
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @for (video of videos(); track video.id) {
+          <div class="animate-fade-in-up">
+             <video [src]="video.safeUrl" controls class="w-full aspect-video bg-black rounded-lg shadow-lg"></video>
+             @if (video.prompt) {
+                <p class="text-text-secondary text-xs mt-2 px-1 line-clamp-2">{{ video.prompt }}</p>
+             }
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

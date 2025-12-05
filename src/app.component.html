@@ -1,0 +1,41 @@
+<div class="flex flex-col md:flex-row h-screen bg-primary/80 backdrop-blur-3xl text-text-primary font-sans">
+  <!-- Sidebar / Bottom Nav -->
+  <aside class="order-2 md:order-1 w-full md:w-64 md:flex-shrink-0 bg-secondary/30 md:bg-secondary/50 md:p-4 flex flex-col border-t border-input/50 md:border-t-0 md:border-r">
+    <!-- Desktop Header -->
+    <div class="hidden md:flex items-center gap-3 mb-8 px-2">
+      <div class="w-10 h-10 bg-gradient-to-br from-accent to-highlight rounded-lg flex items-center justify-center shadow-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-white">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456Z" />
+        </svg>
+      </div>
+      <h1 class="text-xl font-bold text-text-primary">AI Buddy</h1>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="flex flex-row justify-around p-1 md:p-0 md:flex-col md:gap-2">
+      @for (feature of features; track feature.id) {
+        <button (click)="selectFeature(feature.id)"
+                [class.bg-accent]="selectedFeature() === feature.id"
+                [class.md:bg-input]="selectedFeature() === feature.id"
+                [class.text-white]="selectedFeature() === feature.id"
+                [class.md:text-text-primary]="selectedFeature() === feature.id"
+                [class.text-text-secondary]="selectedFeature() !== feature.id"
+                [class.hover:bg-accent/80]="selectedFeature() !== feature.id"
+                [class.md:hover:bg-input/70]="selectedFeature() !== feature.id"
+                class="flex flex-col items-center justify-center gap-1 text-center p-2 rounded-lg w-20 md:w-full md:flex-row md:justify-start md:gap-3 md:px-3 md:py-2.5 transition-colors text-left font-medium">
+          <span [innerHTML]="feature.icon"></span>
+          <span class="text-[11px] leading-tight md:text-sm">{{ feature.name }}</span>
+        </button>
+      }
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="order-1 md:order-2 flex-1 bg-primary/50 overflow-y-auto">
+    @switch (selectedFeature()) {
+      @case ('chat') { <app-chat></app-chat> }
+      @case ('image') { <app-image-generator></app-image-generator> }
+      @case ('video') { <app-video-generator></app-video-generator> }
+    }
+  </main>
+</div>
